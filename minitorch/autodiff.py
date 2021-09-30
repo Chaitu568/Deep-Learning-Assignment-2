@@ -195,7 +195,7 @@ class FunctionBase:
 
     @staticmethod
     def variable(raw, history):
-        raise NotImplementedError()
+        pass
 
     @classmethod
     def apply(cls, *vals):
@@ -235,8 +235,17 @@ class FunctionBase:
             (see `is_constant` to remove unneeded variables)
 
         """
+        # initialise the list
+        res_list = []
+        # put the context and d_output in the tuple
+        re = wrap_tuple(cls.backward(ctx, d_output))
+        for i in range(0, len(inputs)):
+            # if input is not a constant
+            if not is_constant(inputs[i]):
+                res_list.append((inputs[i], re[i]))
+        return res_list
         # TODO: Implement for Task 1.3.
-        raise NotImplementedError('Need to implement for Task 1.3')
+        # raise NotImplementedError('Need to implement for Task 1.3')
 
 
 def is_constant(val):
@@ -275,5 +284,24 @@ def backpropagate(variable, deriv):
 
     No return. Should write to its results to the derivative values of each leaf.
     """
+    # initialise the queue
+    Que = topological_sort(variable)
+    # access the first element
+    d = {Que[0].unique_id: deriv}
+    # take each element in the que and check for the leaf and then accumulate derivative
+    for i in Que:
+        if i.is_leaf():
+            i.accumulate_derivative(d[i.unique_id])
+        else:
+            # if it is not a leaf node
+            d_out = i.history.backprop_step(d[i.unique_id])
+            # index for each list j
+            # d_out is the dictionary
+            for j in d_out:
+                if j[0].unique_id in d.keys():
+                    d[j[0].unique_id] += j[1]
+                else:
+                    # if key not found
+                    d[j[0].unique_id] = j[1]
     # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    # raise NotImplementedError('Need to implement for Task 1.4')

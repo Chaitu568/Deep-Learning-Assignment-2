@@ -13,7 +13,10 @@ import math
 def mul(x, y):
     ":math:`f(x, y) = x * y`"
     # TODO: Implement for Task 0.1.
-    return x * y
+    if x is None or y is None:
+        return 0
+    else:
+        return x * y
 
 
 def id(x):
@@ -61,9 +64,7 @@ def max(x, y):
 def is_close(x, y):
     ":math:`f(x) = |x - y| < 1e-2` "
     # TODO: Implement for Task 0.1.
-    if abs(x - y) < math.exp(1) - 2:
-        return 1
-    return 0
+    return abs(x - y) < 1e-2
 
 
 def sigmoid(x):
@@ -85,7 +86,7 @@ def sigmoid(x):
         float : sigmoid value
     """
     # TODO: Implement for Task 0.1.
-    if x >= 0:
+    if x >= 0.0:
         return 1.0 / (1.0 + math.exp(-x))
     return math.exp(x) / (1.0 + math.exp(x))
 
@@ -103,12 +104,12 @@ def relu(x):
         float : relu value
     """
     # TODO: Implement for Task 0.1.
-    if x > 0:
+    if x > 0.0:
         return x
-    return 0
+    return 0.0
 
 
-EPS = math.exp(1) - 6
+EPS = 1e-6
 
 
 def log(x):
@@ -142,9 +143,9 @@ def inv_back(x, d):
 def relu_back(x, d):
     r"If :math:`f = relu` compute d :math:`d \times f'(x)`"
     # TODO: Implement for Task 0.1.
-    if x > 0:
-        return d
-    return 0
+    if x > 0.0:
+        return 1.0 * d
+    return 0.0
 
 
 # ## Task 0.3
@@ -245,10 +246,10 @@ def reduce(fn, start):
 def sum(ls):
     "Sum up a list using :func:`reduce` and :func:`add`."
     # TODO: Implement for Task 0.3.
-    return reduce(add, 0)(ls)
+    return reduce(add, 0.0)(ls)
 
 
 def prod(ls):
     "Product of a list using :func:`reduce` and :func:`mul`."
     # TODO: Implement for Task 0.3.
-    return reduce(mul, 1)(ls)
+    return reduce(mul, 1.0)(ls)
